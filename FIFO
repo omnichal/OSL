@@ -1,0 +1,54 @@
+#include <stdio.h>
+struct Pages {
+ int position;
+ int value;
+};
+int main() {
+ int n, j;
+ int pagefault = 0;
+ int hit = 0;
+ struct Pages f[3];
+ for (int i = 0; i < 3; i++) {
+ f[i].value = -1;
+ f[i].position = -1;
+ }
+ printf("Enter the size of the code: ");
+ scanf("%d", &n);
+ struct Pages A[n];
+ for (int i = 0; i < n; i++) {
+ printf("Enter the element: ");
+ scanf("%d", &A[i].value);
+ A[i].position = i;
+ }
+ for (int i = 0; i < n; i++) {
+ printf("%d\t%d\n", A[i].value, A[i].position);
+ }
+ for (int i = 0; i < n; i++) {
+ int pagefound = 0;
+ for (j = 0; j < 3; j++) {
+ if (f[j].value == A[i].value) {
+ hit++;
+ pagefound = 1;
+ break;
+ }
+ }
+ if (!pagefound) {
+ pagefault++;
+ int min_index = 0;
+ for (int k = 1; k < 3; k++) {
+ if (f[k].position < f[min_index].position) {
+ min_index = k;
+ }
+ }
+ f[min_index].value = A[i].value;
+ f[min_index].position = A[i].position;
+ }
+ }
+ printf("Frame: ");
+ for (int i = 0; i < 3; i++) {
+ printf("%d\t", f[i].value);
+ }
+ printf("\nPage Faults: %d\n", pagefault);
+ printf("Hits: %d\n", hit);
+ return 0;
+}
