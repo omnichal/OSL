@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int binsearch(int arr[], int search, int low, int high) {
+    if (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (search == arr[mid])
+            return mid;
+        else if (search < arr[mid])
+            return binsearch(arr, search, low, mid - 1);
+        else
+            return binsearch(arr, search, mid + 1, high);
+    }
+    return -1;
+}
+
+int main(int argc, char *argv[]) {
+    int search;
+    printf("Enter the No. to be searched: ");
+    scanf("%d", &search);
+
+    int a[argc - 1];
+    for (int i = 1; i < argc; i++) {
+        a[i - 1] = atoi(argv[i]);
+    }
+    int n = argc - 1;
+
+    int result = binsearch(a, search, 0, n - 1);
+    if (result == -1)
+        printf("Not found\n");
+    else
+        printf("Element is found at index %d\n", result);
+
+    return 0;
+}
