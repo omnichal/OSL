@@ -1,0 +1,52 @@
+#include<stdio.h>
+struct Page {
+ int value;
+ int k;
+};
+int main() {
+ int n;
+ int hit = 0, pageFault = 0;
+ printf("Enter the No. of Elements:");
+ scanf("%d", &n);
+ struct Page A[n];
+ for(int i = 0; i < n; i++) {
+ scanf("%d", &A[i].value);
+ A[i].k = 0;
+ }
+ struct Page F[3];
+ for(int i = 0; i < 3; i++) {
+ F[i].value = -1;
+ F[i].k = -1;
+ }
+ for(int i = 0; i < n; i++) {
+ int pageFound = 0;
+ for(int j = 0; j < 3; j++) {
+ if(A[i].value == F[j].value) {
+ hit++;
+ F[j].k = i;
+ pageFound = 1;
+ break;
+ }
+ }
+ if(!pageFound) {
+ pageFault++;
+ // Find the least recently used page in the frame
+ int minIndex = 0;
+ for(int j = 1; j < 3; j++) {
+ if(F[j].k < F[minIndex].k) {
+ minIndex = j;
+ }
+ }
+ // Replace the least recently used page with the new page
+ F[minIndex].value = A[i].value;
+ F[minIndex].k = i;
+ }
+ }
+ printf("Number of Page Hits: %d\n", hit);
+ printf("Number of Page Faults: %d\n", pageFault);
+ printf("Updated Pages:\n");
+ for(int i = 0; i < 3; i++) {
+ printf("Page %d: Value=%d, K=%d\n", i + 1, F[i].value, F[i].k);
+ }
+ return 0;
+}
