@@ -1,0 +1,58 @@
+#include <stdio.h>
+struct Page{
+ int value;
+ int k;
+};
+int main(){
+ int n;
+ int hit=0,pageFault=0;
+ printf("Enter the number of elements : ");
+ scanf("%d",&n);
+ struct Page A[n];
+ for (int i = 0; i <n ; i++) {
+ printf("Enter the element : ");
+ scanf("%d",&A[i].value);
+ A[i].k=i;
+ }
+ struct Page F[3];
+ for(int i=0;i<3;i++){
+ F[i].value=-1;
+ F[i].k=-1;
+ }
+ for (int i = 0; i < n;i++) {
+ int pageFound=0;
+ for(int j=0;j<3;j++){
+ if(A[i].value==F[j].value){
+ hit++;
+ pageFound=1;
+ break;
+ }
+ }
+ if(!pageFound){
+ pageFault++;
+ int maxIndex=-1;
+ int maxDist=-1;
+ for(int j=0;j<3;j++){
+ int nextUse=n;
+ for(int k=i+1;k<n;k++){
+ if(F[j].value==A[k].value){
+ nextUse=k;
+ break;
+ }
+ }
+ if(nextUse > maxDist){
+ maxDist= nextUse;
+ maxIndex=j;
+ }
+ }
+ F[maxIndex].value=A[i].value;
+ F[maxIndex].k=i;
+ }
+ }
+ printf("Hit : %d\n",hit);
+ printf("PageFault : %d\n\n",pageFault);
+ for(int i=0;i<3;i++){
+ printf("%d\t",F[i].value);
+ }
+ return 0;
+}
